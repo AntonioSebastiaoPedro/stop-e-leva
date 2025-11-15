@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stop & Leva - Contato</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="contact">
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html">Stop & Leva</a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Produtos</a>
+        <a href="about.html">Sobre</a>
+        <a href="contact.html" class="active">Contato</a>
+      </nav>
+      <div class="header__actions">
+        <a class="cart" href="cart.html">
+          <span>🛒</span>
+          <span class="cart__count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Fale conosco</h1>
+    <form class="form" id="contactForm">
+      <div class="form__row">
+        <input type="text" name="nome" placeholder="Nome" required />
+      </div>
+      <div class="form__row">
+        <input type="email" name="email" placeholder="Email" required />
+      </div>
+      <div class="form__row">
+        <input type="text" name="assunto" placeholder="Assunto" required />
+      </div>
+      <div class="form__row">
+        <textarea name="mensagem" placeholder="Mensagem" rows="5" required></textarea>
+      </div>
+      <button class="btn btn--primary" type="submit">Enviar</button>
+    </form>
+    <div class="contact-info">
+      <div>Endereço: Rua Exemplo, 123 - São Paulo</div>
+      <div>Telefone: (11) 3333-3333</div>
+      <div>WhatsApp: (11) 99999-9999</div>
+      <div><iframe title="mapa" src="https://maps.google.com/maps?q=S%C3%A3o%20Paulo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="240" style="border:0;"></iframe></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong>Stop & Leva</strong>
+        <div class="footer__links">
+          <a href="#">FAQ</a>
+          <a href="#">Política de Privacidade</a>
+        </div>
+      </div>
+      <div>
+        <div>Contato: contato@stopeleva.com</div>
+        <div>WhatsApp: (11) 99999-9999</div>
+      </div>
+      <div class="footer__socials">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

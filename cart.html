@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stop & Leva - Carrinho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="cart">
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html">Stop & Leva</a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Produtos</a>
+        <a href="about.html">Sobre</a>
+        <a href="contact.html">Contato</a>
+      </nav>
+      <div class="header__actions">
+        <a class="cart" href="cart.html">
+          <span>🛒</span>
+          <span class="cart__count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Seu carrinho</h1>
+    <div id="cartItems" class="cart-list"></div>
+    <div class="cart-summary">
+      <div class="cart-total">Total: <strong id="cartTotal">R$ 0,00</strong></div>
+      <button class="btn btn--primary" id="checkoutBtn">Finalizar Compra</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong>Stop & Leva</strong>
+        <div class="footer__links">
+          <a href="#">FAQ</a>
+          <a href="#">Política de Privacidade</a>
+        </div>
+      </div>
+      <div>
+        <div>Contato: contato@stopeleva.com</div>
+        <div>WhatsApp: (11) 99999-9999</div>
+      </div>
+      <div class="footer__socials">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

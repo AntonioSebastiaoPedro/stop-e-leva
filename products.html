@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stop & Leva - Produtos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="products">
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html">Stop & Leva</a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Produtos</a>
+        <a href="about.html">Sobre</a>
+        <a href="contact.html">Contato</a>
+      </nav>
+      <div class="header__actions">
+        <a class="cart" href="cart.html">
+          <span>🛒</span>
+          <span class="cart__count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container layout">
+    <aside class="sidebar">
+      <h3>Filtros</h3>
+      <div class="filter">
+        <label>Categoria</label>
+        <select id="filterCategory">
+          <option value="">Todas</option>
+          <option>Bebidas</option>
+          <option>Lanches</option>
+          <option>Higiene</option>
+          <option>Snacks</option>
+          <option>Outros</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label>Promoções</label>
+        <label class="checkbox"><input type="checkbox" id="filterPromo" /> Em promoção</label>
+      </div>
+      <div class="filter">
+        <label>Preço máximo</label>
+        <input type="number" id="filterMax" placeholder="R$" />
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="searchbar">
+        <input type="search" id="searchInput" placeholder="Buscar produtos..." />
+      </div>
+      <div class="product-grid" id="productsGrid"></div>
+      <div id="emptyState" class="empty hidden">Nenhum produto encontrado.</div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <strong>Stop & Leva</strong>
+        <div class="footer__links">
+          <a href="#">FAQ</a>
+          <a href="#">Política de Privacidade</a>
+        </div>
+      </div>
+      <div>
+        <div>Contato: contato@stopeleva.com</div>
+        <div>WhatsApp: (11) 99999-9999</div>
+      </div>
+      <div class="footer__socials">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
