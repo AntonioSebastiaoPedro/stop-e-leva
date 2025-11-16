@@ -23,6 +23,7 @@ const setQty=(id,qty)=>{const it=cart.find(i=>i.id===id);if(!it)return;if(qty<=0
 
 const productCardHTML=(p)=>`
   <div class="product-card">
+    ${p.promo ? '<span class="badge badge--promo">Promo</span>' : ''}
     <img src="${p.image}" alt="${p.name}" />
     <div class="product-card__info">
       <div>${p.name}</div>
@@ -53,6 +54,8 @@ const renderProducts=()=>{
   const filterPromo=qs('#filterPromo');
   const filterMax=qs('#filterMax');
   const searchInput=qs('#searchInput');
+  const clearFiltersBtn=qs('#clearFilters');
+  
   if(initialCat && filterCategory) filterCategory.value=initialCat;
 
   const apply=()=>{
@@ -61,15 +64,38 @@ const renderProducts=()=>{
     const promo=filterPromo.checked;
     const max=parseFloat(filterMax.value);
     const q=(searchInput.value||'').toLowerCase();
+    
     if(cat) list=list.filter(p=>p.category===cat);
     if(promo) list=list.filter(p=>p.promo);
     if(!isNaN(max)) list=list.filter(p=>p.price<=max);
     if(q) list=list.filter(p=>p.name.toLowerCase().includes(q));
+    
     grid.innerHTML=list.map(productCardHTML).join('');
     qs('#emptyState').classList.toggle('hidden',list.length>0);
+    
+    // Update results counter
+    const resultsText = list.length === 1 ? '1 produto encontrado' : `${list.length} produtos encontrados`;
+    let counter = qs('#resultsCounter');
+    if (!counter) {
+      counter = document.createElement('div');
+      counter.id = 'resultsCounter';
+      counter.className = 'results-counter';
+      grid.parentElement.insertBefore(counter, grid);
+    }
+    counter.textContent = resultsText;
+  };
+
+  const clearFilters=()=>{
+    filterCategory.value='';
+    filterPromo.checked=false;
+    filterMax.value='';
+    searchInput.value='';
+    apply();
   };
 
   [filterCategory,filterPromo,filterMax,searchInput].forEach(el=>el&&el.addEventListener('input',apply));
+  clearFiltersBtn&&clearFiltersBtn.addEventListener('click',clearFilters);
+  
   grid.addEventListener('click',e=>{
     const btn=e.target.closest('[data-add]');
     if(!btn) return; e.preventDefault();
@@ -113,19 +139,34 @@ const renderCart=()=>{
   const list=qs('#cartItems');
   if(!list) return;
   const draw=()=>{
-    if(cart.length===0){list.innerHTML='<div class="empty">Seu carrinho está vazio.</div>';qs('#cartTotal').textContent=currency(0);return}
+    if(cart.length===0){
+      list.innerHTML=`
+        <div class="empty">
+          <div style="font-size: 64px; margin-bottom: 16px;">🛒</div>
+          <h3>Seu carrinho está vazio</h3>
+          <p>Adicione produtos para continuar com sua compra</p>
+          <a href="products.html" class="btn btn--primary">Ver Produtos</a>
+        </div>`;
+      qs('#cartTotal').textContent=currency(0);
+      return;
+    }
+    
     list.innerHTML=cart.map(it=>`
       <div class="cart-item">
         <img src="${it.image}" alt="${it.name}">
-        <div>${it.name}</div>
-        <div class="price">${currency(it.price)}</div>
         <div>
-          <input data-qty="${it.id}" type="number" min="1" value="${it.qty}" style="width:80px;padding:8px;border:1px solid #ddd;border-radius:8px" />
+          <div style="font-weight: 600;">${it.name}</div>
+          <div style="font-size: 14px; color: #6c757d;">Preço unitário: ${currency(it.price)}</div>
+        </div>
+        <div class="price">${currency(it.price * it.qty)}</div>
+        <div>
+          <input data-qty="${it.id}" type="number" min="1" value="${it.qty}" />
         </div>
         <div>
-          <button class="btn btn--outline" data-remove="${it.id}">Remover</button>
+          <button class="btn btn--outline" data-remove="${it.id}">🗑️ Remover</button>
         </div>
       </div>`).join('');
+    
     const total=cart.reduce((a,i)=>a+i.price*i.qty,0);
     qs('#cartTotal').textContent=currency(total);
   };
@@ -148,13 +189,141 @@ const renderCart=()=>{
   draw();
 };
 
+// Interactive FX
+const prefersReducedMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const enableTiltCards = () => {
+  if(prefersReducedMotion()) return;
+  const cards = qsa('.product-card');
+  cards.forEach(card => {
+    let rect;
+    const onEnter = () => { rect = card.getBoundingClientRect(); card.style.willChange = 'transform'; };
+    const onMove = (e) => {
+      if(!rect) rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      const rotX = (0.5 - y) * 10; // tilt up/down
+      const rotY = (x - 0.5) * 12; // tilt left/right
+      card.style.transform = `perspective(700px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-5px)`;
+    };
+    const onLeave = () => { card.style.transform = ''; card.style.willChange = ''; };
+    card.addEventListener('mouseenter', onEnter);
+    card.addEventListener('mousemove', onMove);
+    card.addEventListener('mouseleave', onLeave);
+  });
+};
+
+const enableHeroParallax = () => {
+  if(prefersReducedMotion()) return;
+  const heroImg = qs('.hero__image img');
+  if(!heroImg) return;
+  const onMove = (e) => {
+    const { innerWidth: w, innerHeight: h } = window;
+    const x = (e.clientX / w - 0.5) * 12;
+    const y = (e.clientY / h - 0.5) * 12;
+    heroImg.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  };
+  window.addEventListener('mousemove', onMove);
+};
+
+// Form enhancements
+const enhanceFormInputs = () => {
+  const inputs = qsa('.form input, .form textarea');
+  inputs.forEach(input => {
+    // Add focus classes for better styling
+    input.addEventListener('focus', () => {
+      input.parentElement.classList.add('focused');
+    });
+    
+    input.addEventListener('blur', () => {
+      input.parentElement.classList.remove('focused');
+      if (!input.value.trim()) {
+        input.parentElement.classList.remove('filled');
+      } else {
+        input.parentElement.classList.add('filled');
+      }
+    });
+    
+    // Check initial state
+    if (input.value.trim()) {
+      input.parentElement.classList.add('filled');
+    }
+  });
+};
+
+// Contact form submission with feedback
+const handleContactForm = () => {
+  const form = qs('#contactForm');
+  if (!form) return;
+  
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Add loading state
+    const button = form.querySelector('.btn--primary');
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳ Enviando...';
+    button.disabled = true;
+    
+    // Simulate form submission
+    setTimeout(() => {
+      button.innerHTML = '✅ Enviado com sucesso!';
+      button.style.background = 'var(--action)';
+      
+      // Reset form
+      setTimeout(() => {
+        form.reset();
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.style.background = '';
+        
+        // Reset form states
+        qsa('.form__group').forEach(group => {
+          group.classList.remove('filled', 'focused');
+        });
+      }, 2000);
+    }, 1500);
+  });
+};
+
+// Smooth scroll for anchor links
+const enableSmoothScroll = () => {
+  qsa('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href === '#') return;
+      
+      e.preventDefault();
+      const target = qs(href);
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+};
+
 const init=()=>{
   updateCartCount();
   const page=document.body.dataset.page;
+  
   if(page==='home') renderFeatured();
   if(page==='products') renderProducts();
   if(page==='product') renderProductDetail();
   if(page==='cart') renderCart();
+  if(page==='contact') {
+    enhanceFormInputs();
+    handleContactForm();
+  }
+  
+  // Enable global enhancements
+  enableSmoothScroll();
+  
+  // Enable interactions after content
+  if(page==='home' || page==='products') enableTiltCards();
+  if(page==='home') enableHeroParallax();
 };
 
 document.addEventListener('DOMContentLoaded',init);
