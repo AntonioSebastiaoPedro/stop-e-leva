@@ -260,27 +260,39 @@ const enableHeroParallax = () => {
 
 // Form enhancements
 const enhanceFormInputs = () => {
-  const inputs = qsa('.form input, .form textarea');
+  const inputs = qsa('.form__group input, .form__group textarea, .login-form input, .login-form textarea');
+  
   inputs.forEach(input => {
+    const group = input.closest('.form__group');
+    if (!group) return;
+    
     // Add focus classes for better styling
     input.addEventListener('focus', () => {
-      input.parentElement.classList.add('focused');
+      group.classList.add('focused');
     });
     
     input.addEventListener('blur', () => {
-      input.parentElement.classList.remove('focused');
-      if (!input.value.trim()) {
-        input.parentElement.classList.remove('filled');
-      } else {
-        input.parentElement.classList.add('filled');
-      }
+      group.classList.remove('focused');
+      checkInputState(input, group);
+    });
+    
+    // Check on input change
+    input.addEventListener('input', () => {
+      checkInputState(input, group);
     });
     
     // Check initial state
-    if (input.value.trim()) {
-      input.parentElement.classList.add('filled');
-    }
+    checkInputState(input, group);
   });
+};
+
+// Helper function to check input state
+const checkInputState = (input, group) => {
+  if (input.value.trim() !== '' || input.matches(':focus')) {
+    group.classList.add('filled');
+  } else {
+    group.classList.remove('filled');
+  }
 };
 
 // Contact form submission with feedback
@@ -318,6 +330,94 @@ const handleContactForm = () => {
   });
 };
 
+// Login form submission with feedback
+const handleLoginForm = () => {
+  const form = qs('#loginForm');
+  if (!form) return;
+  
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    // Get form data
+    const email = qs('#loginEmail').value;
+    const password = qs('#loginPassword').value;
+    const remember = qs('#rememberMe').checked;
+    
+    // Add loading state
+    const button = form.querySelector('.btn--login');
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳ Entrando...';
+    button.disabled = true;
+    
+    // Simulate login process
+    setTimeout(() => {
+      // Store login state (simplified)
+      if (remember) {
+        localStorage.setItem('se_user_logged', 'true');
+        localStorage.setItem('se_user_email', email);
+      } else {
+        sessionStorage.setItem('se_user_logged', 'true');
+        sessionStorage.setItem('se_user_email', email);
+      }
+      
+      button.innerHTML = '✅ Login realizado!';
+      button.style.background = 'var(--action)';
+      
+      // Redirect to home page
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    }, 1500);
+  });
+  
+  // Social login buttons
+  const googleBtn = qs('.btn--google');
+  const facebookBtn = qs('.btn--facebook');
+  
+  if (googleBtn) {
+    googleBtn.addEventListener('click', () => {
+      alert('Login com Google seria integrado aqui (funcionalidade futura)');
+    });
+  }
+  
+  if (facebookBtn) {
+    facebookBtn.addEventListener('click', () => {
+      alert('Login com Facebook seria integrado aqui (funcionalidade futura)');
+    });
+  }
+  
+  // Signup link
+  const signupLink = qs('#signupLink');
+  if (signupLink) {
+    signupLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Página de cadastro seria criada aqui (funcionalidade futura)');
+    });
+  }
+};
+
+// Check if user is logged in and update UI
+const updateLoginState = () => {
+  const isLoggedIn = localStorage.getItem('se_user_logged') || sessionStorage.getItem('se_user_logged');
+  const userEmail = localStorage.getItem('se_user_email') || sessionStorage.getItem('se_user_email');
+  const loginBtn = qs('#loginBtn');
+  
+  if (isLoggedIn && loginBtn) {
+    const userName = userEmail ? userEmail.split('@')[0] : 'Usuário';
+    loginBtn.innerHTML = `👤 ${userName}`;
+    loginBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (confirm('Deseja fazer logout?')) {
+        localStorage.removeItem('se_user_logged');
+        localStorage.removeItem('se_user_email');
+        sessionStorage.removeItem('se_user_logged');
+        sessionStorage.removeItem('se_user_email');
+        location.reload();
+      }
+    });
+  }
+};
+
 // Smooth scroll for anchor links
 const enableSmoothScroll = () => {
   qsa('a[href^="#"]').forEach(link => {
@@ -339,6 +439,8 @@ const enableSmoothScroll = () => {
 
 const init=()=>{
   updateCartCount();
+  updateLoginState();
+  
   const page=document.body.dataset.page;
   
   if(page==='home') renderFeatured();
@@ -348,6 +450,9 @@ const init=()=>{
   if(page==='contact') {
     enhanceFormInputs();
     handleContactForm();
+  }
+  if(page==='login') {
+    handleLoginForm();
   }
   
   // Enable global enhancements
