@@ -1,5 +1,5 @@
 const qs=(s,el=document)=>el.querySelector(s);const qsa=(s,el=document)=>[...el.querySelectorAll(s)];
-const currency = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const currency = v => v.toLocaleString('pt-AO',{style:'currency',currency:'AOA'}).replace('AOA','Kz');
 
 const CART_KEY='se_cart_v1';
 const loadCart=()=>{try{return JSON.parse(localStorage.getItem(CART_KEY))||[]}catch{return[]}};
