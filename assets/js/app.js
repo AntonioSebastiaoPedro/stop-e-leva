@@ -16,6 +16,38 @@ const addToCart=(product,qty=1)=>{
   const existing=cart.find(i=>i.id===product.id);
   if(existing){existing.qty+=qty}else{cart.push({id:product.id,name:product.name,price:product.price,image:product.image,qty})}
   saveCart(cart);updateCartCount();
+  
+  // Show feedback toast
+  showToast(`✅ ${product.name} adicionado ao carrinho!`, 'success');
+};
+
+// Toast notification system
+const showToast = (message, type = 'info') => {
+  // Remove existing toast
+  const existingToast = qs('.toast');
+  if (existingToast) {
+    existingToast.remove();
+  }
+  
+  const toast = document.createElement('div');
+  toast.className = `toast toast--${type}`;
+  toast.textContent = message;
+  
+  // Add to page
+  document.body.appendChild(toast);
+  
+  // Animate in
+  setTimeout(() => {
+    toast.classList.add('toast--show');
+  }, 100);
+  
+  // Remove after delay
+  setTimeout(() => {
+    toast.classList.remove('toast--show');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 3000);
 };
 
 const removeFromCart=(id)=>{cart=cart.filter(i=>i.id!==id);saveCart(cart);updateCartCount()};
