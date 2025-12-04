@@ -87,6 +87,8 @@ img{
   background: linear-gradient(145deg, #ffffff, #f8f9fa);
   height: fit-content;
   box-shadow: var(--shadow-light);
+  min-width: 0; /* Permite que o elemento encolha */
+  overflow: hidden; /* Evita overflow horizontal */
 }
 
 .sidebar h3{
@@ -106,6 +108,16 @@ img{
   background: white;
   border-radius: var(--border-radius-small);
   box-shadow: var(--shadow-light);
+  min-width: 0; /* Permite que o elemento encolha */
+}
+
+/* Garantia de que todos os inputs da sidebar fiquem dentro do container */
+.sidebar input,
+.sidebar select,
+.sidebar textarea{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .filter:last-child{
@@ -690,7 +702,8 @@ input[type="number"]:hover{
 
 /* === ESTILOS PARA FILTROS === */
 .filter select,
-.filter input[type="range"]{
+.filter input[type="range"],
+.filter input[type="number"]{
   width: 100%;
   padding: 10px 12px;
   border: 2px solid #e9ecef;
@@ -699,12 +712,20 @@ input[type="number"]:hover{
   background: #ffffff;
   transition: var(--transition);
   outline: none;
+  box-sizing: border-box;
 }
 
 .filter select:focus,
-.filter input[type="range"]:focus{
+.filter input[type="range"]:focus,
+.filter input[type="number"]:focus{
   border-color: var(--brand);
   box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+}
+
+/* Estilo específico para input de preço máximo */
+.filter input[type="number"]{
+  text-align: left;
+  font-size: 14px;
 }
 
 /* Checkbox customizado */
